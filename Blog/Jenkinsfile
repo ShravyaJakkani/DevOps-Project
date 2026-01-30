@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_USER = "jakkani7"           
+        BACKEND_IMAGE = "blog-backend"        
+        FRONTEND_IMAGE = "blog-frontend"      
+    }
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                git 'https://github.com/ShravyaJakkani/DevOps-Project.git'   // replace with your GitHub repo URL
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                sh 'docker build -t $DOCKERHUB_USER/$BACKEND_IMAGE ./server'
+                sh 'docker build -t $DOCKERHUB_USER/$FRONTEND_IMAGE ./client'
+            }
+        }
+
+        stage('Push Images to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',   
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
+                )]) {
+                    sh 'echo $PASS | docker login -u $USER --password-stdin'
+                    sh 'docker push $DOCKERHUB_USER/$BACKEND_IMAGE'
+                    sh 'docker push $DOCKERHUB_USER/$FRONTEND_IMAGE'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline executed successfully"
+        }
+        failure {
+            echo "Pipeline failed"
+        }
+    }
+}

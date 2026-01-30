@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  backend:
+    image: jakkani7/blog-backend:latest
+    ports:
+      - "5001:5001"
+
+  frontend:
+    image: jakkani7/blog-frontend:latest
+    env_file:
+      - ./client/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

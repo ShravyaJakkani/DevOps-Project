@@ -52,7 +52,7 @@ const BlogList = () => {
             <div key={blog._id} className="blog-card">
               {blog.image && (
                 <img 
-                    src={`http://localhost:5001${blog.image}`} // full backend URL
+                    src={`${process.env.REACT_APP_API_URL}${blog.image}`} // full backend URL
                     alt={blog.title} 
                     className="blog-image"
   />
