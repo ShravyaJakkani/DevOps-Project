@@ -8,16 +8,10 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/ShravyaJakkani/DevOps-Project.git'   // replace with your GitHub repo URL
-            }
-        }
-
         stage('Build Docker Images') {
             steps {
-                sh 'docker build -t $DOCKERHUB_USER/$BACKEND_IMAGE ./server'
-                sh 'docker build -t $DOCKERHUB_USER/$FRONTEND_IMAGE ./client'
+                sh 'docker build -t $DOCKERHUB_USER/$BACKEND_IMAGE ./Blog/server'
+                sh 'docker build -t $DOCKERHUB_USER/$FRONTEND_IMAGE ./Blog/client'
             }
         }
 
